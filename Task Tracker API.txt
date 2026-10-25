@@ -1,0 +1,71 @@
+Day 1
+Monday
+
+Build the REST API
+Deliverable: working endpoints
+- Create the task-tracker-api repository.
+- Set up a Python virtual environment and Flask.
+- Implement GET /health, POST /tasks, and GET /tasks.
+- Initially store tasks in memory.
+- Test the endpoints using curl and commit the code.
+Achievement: You can create a task and retrieve the task list through HTTP.
+------------------------------------------------------------------------------
+Day 2
+Tuesday
+
+Add PostgreSQL and Docker
+Deliverable: persistent tasks
+- Add PATCH /tasks/<id> to mark a task complete.
+- Add DELETE /tasks/<id>.
+- Replace in-memory storage with PostgreSQL.
+- Write a Dockerfile and compose.yaml.
+- Run the Flask API and database as separate containers.
+Achievement: Tasks remain stored after restarting the API container.
+------------------------------------------------------------------------------------
+Day 3
+Wednesday
+
+Linux and networking troubleshooting
+Deliverable: working diagnostics
+- Inspect processes, memory and disk with ps, free -h and df -h.
+- Inspect container status and logs with docker ps and docker compose logs.
+- Test API responses using curl -i.
+- Deliberately misconfigure the database hostname or port.
+- Find the cause and restore connectivity.
+Achievement: You can distinguish an application error from a container networking or database connection error.
+--------------------------------------------------------------------------------------
+Day 4
+Thursday
+
+Create the CI/CD pipeline
+Deliverable: automated build
+- Write automated tests for creating and completing tasks.
+- Create .github/workflows/ci.yml.
+- Run tests on every push.
+- Build a Docker image after tests pass.
+- Push a commit and inspect the GitHub Actions logs.
+Achievement: Your code changes trigger automated tests and an image build. Publish the image to Docker Hub if time allows.
+-----------------------------------------------------------------------------
+Day 5
+Friday
+
+Deploy to Kubernetes
+Deliverable: running application
+- Create deployment.yaml and service.yaml for the API.
+- Configure database credentials using a Kubernetes Secret.
+- Deploy PostgreSQL with a PersistentVolumeClaim.
+- Use the image built by your CI pipeline.
+- Verify Pods, Services, database connectivity and API responses.
+Achievement: The API runs in Kubernetes and tasks persist across API Pod restarts.
+-------------------------------------------------------------------------------
+Day 6
+Saturday
+
+Incident drill and interview review
+Deliverable: documented recovery
+- Deploy a deliberately incorrect image tag in a test Deployment.
+- Diagnose the issue using kubectl describe pod, kubectl get events and kubectl logs.
+- Restore the correct image and verify recovery.
+- Review the complete request flow and CI/CD workflow.
+- Record the incident, root cause and fix in your README.
+Achievement: You can troubleshoot a failed deployment and explain how code reaches the running application.
