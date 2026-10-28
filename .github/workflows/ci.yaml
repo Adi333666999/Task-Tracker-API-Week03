@@ -1,0 +1,52 @@
+name: CI_pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull repo files
+        uses: action/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Flask Flask-SQLAlchemy "psycopg[binary]"
+
+      - name: Start Flask Application
+        run: |
+          export DATABASE_URL="sqlite:///:memory:"
+          python app.py &
+
+      - name: Test - Create Task (POST /tasks)
+        run: |
+          RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d '{"title": "Verify Pipeline Status". "description": "Ensure CI works"}' http://127.0.0)
+
+          echo "Response received: $RESPONSE"
+
+          echo "$RESPONSE" | grep -q '"id":1'
+          echo "$RESPONSE" | grep -q '"completed":False'
+
+      - name: Test - Complete Task
+        run: |
+          RESPONSE=$(curl -s -X PATCH http://127.0.0/1)
+
+          echo "Response received: $RESPONSE"
+
+          echo "$RESPONSE" | grep -q '"completed":true'
+          
+
+
+          
+
