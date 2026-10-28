@@ -42,7 +42,7 @@ jobs:
 
     - name: Test - Complete Task (PATCH /tasks/1)
       run: |
-        RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/1)
+        RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/tasks/1)
         
         echo "Response received: $RESPONSE"
         echo "$RESPONSE" | grep -q '"completed":true'
