@@ -31,7 +31,7 @@ jobs:
 
       - name: Test - Create Task (POST /tasks)
         run: |
-          RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d '{"title": "Verify Pipeline Status". "description": "Ensure CI works"}' http://127.0.0)
+          RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d '{"title": "Verify Pipeline Status". "description": "Ensure CI works"}' http://127.0.0.1:5000/tasks)
 
           echo "Response received: $RESPONSE"
 
@@ -40,7 +40,7 @@ jobs:
 
       - name: Test - Complete Task
         run: |
-          RESPONSE=$(curl -s -X PATCH http://127.0.0/1)
+          RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/1)
 
           echo "Response received: $RESPONSE"
 
