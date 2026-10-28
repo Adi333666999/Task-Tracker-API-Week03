@@ -30,17 +30,16 @@ jobs:
         python app.py &
         sleep 3
 
-    - name: Test - Create Task (POST /tasks)
+    - name: Run End-to-End API Integration Tests
       run: |
-        RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d "{\"title\": \"Verify Pipeline Status\", \"description\": \"Ensure CI works\"}" http://127.0.0.1:5000/tasks)
+        # 1. Create a task (POST)
+        echo "=== Testing POST /tasks ==="
+        POST_RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" -d "{\"title\": \"Verify Pipeline Status\", \"description\": \"Ensure CI works\"}" http://127.0.0.1:5000/tasks)
+        echo "POST Response: $POST_RESPONSE"
+        echo "$POST_RESPONSE" | grep -q '"id":1'
         
-        echo "Response received: $RESPONSE"
-        echo "$RESPONSE" | grep -q '"id":'
-        echo "$RESPONSE" | grep -q '"completed":'
-
-    - name: Test - Complete Task (PATCH /tasks/1)
-      run: |
-        RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/tasks/1)
-        
-        echo "Response received: $RESPONSE"
-        echo "$RESPONSE" | grep -q '"completed":true'
+        # 2. Complete the task (PATCH)
+        echo "=== Testing PATCH /tasks/1 ==="
+        PATCH_RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/tasks/1)
+        echo "PATCH Response: $PATCH_RESPONSE"
+        echo "$PATCH_RESPONSE" | grep -q '"completed":true'
