@@ -1,53 +1,48 @@
-name: CI_pipeline
+name: Python CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test-api:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Pull repo files
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install Flask Flask-SQLAlchemy "psycopg[binary]"
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install Flask Flask-SQLAlchemy "psycopg[binary]"
 
-      - name: Start Flask Application
-        run: |
-          export DATABASE_URL="sqlite:///:memory:"
-          python app.py &
+    - name: Start Flask Application
+      run: |
+        export DATABASE_URL="sqlite:///:memory:"
+        python app.py &
+        sleep 3
 
-      - name: Test - Create Task (POST /tasks)
+    - name: Test - Create Task (POST /tasks)
       run: |
         RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" \
-          -d '{"title": "Verify Pipeline Status", "description": "Ensure CI works"}' \
+          -d "{\"title\": \"Verify Pipeline Status\", \"description\": \"Ensure CI works\"}" \
           http://127.0.0)
         
         echo "Response received: $RESPONSE"
         echo "$RESPONSE" | grep -q '"id":'
-        echo "$RESPONSE" | grep -q '"completed":''
+        echo "$RESPONSE" | grep -q '"completed":'
 
-      - name: Test - Complete Task
-        run: |
-          RESPONSE=$(curl -s -X PATCH http://127.0.0.1:5000/1)
-
-          echo "Response received: $RESPONSE"
-
-          echo "$RESPONSE" | grep -q '"completed":true'
-          
-
-
-          
-
+    - name: Test - Complete Task (PATCH /tasks/1)
+      run: |
+        RESPONSE=$(curl -s -X PATCH http://127.0.0/1)
+        
+        echo "Response received: $RESPONSE"
+        echo "$RESPONSE" | grep -q '"completed":true'
