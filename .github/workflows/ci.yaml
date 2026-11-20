@@ -40,10 +40,10 @@ jobs:
 
       - name: test 
         run: pytest
-          env:
-            DB_HOST: 127.0.0.1
-            DB_USER: root 
-            DB_PASSWORD: testpassword 
-            DB_NAME: taskdb
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: root 
+          DB_PASSWORD: testpassword 
+          DB_NAME: taskdb
 
  
