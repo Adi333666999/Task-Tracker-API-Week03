@@ -74,4 +74,22 @@ jobs:
             ${{  secrets.DOCKERHUB_USERNAME  }}/task-tracker-api:latest
           cache-from: type=gha
           cache-to: type=gha, mode=max
+
+  deploy:
+    runs-on: self-hosted
+    needs: build-and-push
+    if: github.event_name == 'push'
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4 
+      
+      - name: Apply k8s manifests
+        run: kubectl apply -f k8s/
+
+      - name: updated deployment image 
+        run: kubectl set image deployment/task-tracker-api task-tracker-api=${{ secrets.DOCKERHUB_USERNAME }}/task-tracker-api:${{ github.sha }}
+
+      - name: verify rolling update
+        run: kubectl rollout status deployment/task-tracker-api --timeout=120s
+
  
