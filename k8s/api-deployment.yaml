@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: task-tracker-api
+  labels:
+    app: task-tracker-api
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+      app: task-tracker-api
+  template:
+    metadata:
+      labels:
+        app: task-tracker-api
+    spec:
+      containers:
+        - name: task-tracker-api
+          image: airoli/task-tracker-api
+          imagePullPolicy: Always
+          env: 
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_USER 
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet: 
+              path: /health
+              port: 5000
+            timeoutSeconds: 5
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: 
+              path: /health
+              port: 5000
+            timeoutSeconds: 5
+            failureThreshold: 5
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          
